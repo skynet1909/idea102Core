@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using idea102Core.Data.EF;
 
 namespace idea102Core.Data.Migrations
 {
     [DbContext(typeof(iCoreDbContext))]
-    partial class iCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210730074954_AspNetCoreIdentityDatabaseUpdate")]
+    partial class AspNetCoreIdentityDatabaseUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

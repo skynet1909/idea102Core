@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using idea102Core.Data.EF;
 
 namespace idea102Core.Data.Migrations
 {
     [DbContext(typeof(iCoreDbContext))]
-    partial class iCoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210730073635_AspNetCoreIdentityDatabase")]
+    partial class AspNetCoreIdentityDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,7 +182,7 @@ namespace idea102Core.Data.Migrations
                         new
                         {
                             Id = new Guid("8d04dce2-969a-435d-bba4-df3f325983dc"),
-                            ConcurrencyStamp = "480006e9-feab-49fb-bedd-c1a43a823ae3",
+                            ConcurrencyStamp = "9c27a919-437f-45c2-a7bc-3ba04345ff17",
                             Description = "Administrator role",
                             Name = "admin",
                             NormalizedName = "admin"
@@ -257,7 +259,7 @@ namespace idea102Core.Data.Migrations
                         {
                             Id = new Guid("69bd714f-9576-45ba-b5b7-f00649be00de"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e2fe8cd8-1094-47da-9ed8-a47dfb8ccc76",
+                            ConcurrencyStamp = "8cbb8684-ed5e-4b14-9d9a-dc081b26cd56",
                             Dob = new DateTime(2020, 1, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "tedu.international@gmail.com",
                             EmailConfirmed = true,
@@ -266,7 +268,7 @@ namespace idea102Core.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "tedu.international@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIoJxzl8b+WsCaOugs2ocea4cL/4TzpuoG+dtBJjCmTa/UrYuBk80hpvOVBXGRENUw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBnxEwnpxHZSOs3qHUCiw6QgCQnFGH9zW0cxVj6PwscYZvdzsxsDoNEX0H+Lch5OxQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -387,6 +389,9 @@ namespace idea102Core.Data.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<Guid?>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -419,7 +424,7 @@ namespace idea102Core.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("Orders");
                 });
@@ -457,7 +462,7 @@ namespace idea102Core.Data.Migrations
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 7, 30, 14, 49, 53, 45, DateTimeKind.Local).AddTicks(3525));
+                        .HasDefaultValue(new DateTime(2021, 7, 30, 14, 36, 34, 747, DateTimeKind.Local).AddTicks(2175));
 
                     b.Property<bool?>("IsFeatured")
                         .HasColumnType("bit");
@@ -495,7 +500,7 @@ namespace idea102Core.Data.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(2021, 7, 30, 14, 49, 53, 86, DateTimeKind.Local).AddTicks(5547),
+                            DateCreated = new DateTime(2021, 7, 30, 14, 36, 34, 782, DateTimeKind.Local).AddTicks(5732),
                             OriginalPrice = 100000m,
                             Price = 200000m,
                             SortOrder = 0,
@@ -986,13 +991,9 @@ namespace idea102Core.Data.Migrations
 
             modelBuilder.Entity("idea102Core.Data.Entities.Order", b =>
                 {
-                    b.HasOne("idea102Core.Data.Entities.AppUser", "AppUser")
+                    b.HasOne("idea102Core.Data.Entities.AppUser", null)
                         .WithMany("Orders")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AppUser");
+                        .HasForeignKey("AppUserId");
                 });
 
             modelBuilder.Entity("idea102Core.Data.Entities.OrderDetail", b =>
@@ -1084,11 +1085,9 @@ namespace idea102Core.Data.Migrations
 
             modelBuilder.Entity("idea102Core.Data.Entities.Transaction", b =>
                 {
-                    b.HasOne("idea102Core.Data.Entities.AppUser", "AppUser")
+                    b.HasOne("idea102Core.Data.Entities.AppUser", null)
                         .WithMany("Transactions")
                         .HasForeignKey("AppUserId");
-
-                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("idea102Core.Data.Entities.AppUser", b =>

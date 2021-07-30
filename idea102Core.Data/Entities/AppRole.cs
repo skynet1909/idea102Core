@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace idea102Core.Data.Entities
 {
-    public class AppRole
+    public class AppRole : IdentityRole<Guid>
     {
-        public int Id { get; set; }
         public string Description { get; set; }
     }
 }
