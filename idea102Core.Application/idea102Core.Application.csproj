@@ -4,4 +4,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Catalog\Categories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\idea102Core.Data\idea102Core.Data.csproj" />
+    <ProjectReference Include="..\idea102Core.Utilities\idea102Core.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>
