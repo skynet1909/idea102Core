@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace idea102Core.Application.Catalog.Products.Dtos.Manage
-{
+namespace idea102Core.ViewModels.Catalog.Products
+{ 
     public class ProductUpdateRequest
     {
         public int Id { get; set; }

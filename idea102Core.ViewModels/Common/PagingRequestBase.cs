@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace idea102Core.Application.Dtos
+namespace idea102Core.ViewModels.Common
 {
     public class PagingRequestBase
     {

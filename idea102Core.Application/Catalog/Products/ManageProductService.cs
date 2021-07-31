@@ -1,6 +1,5 @@
-﻿using idea102Core.Application.Catalog.Products.Dtos;
-using idea102Core.Application.Catalog.Products.Dtos.Manage;
-using idea102Core.Application.Dtos;
+﻿using idea102Core.ViewModels.Catalog.Products;
+using idea102Core.ViewModels.Common;
 using idea102Core.Data.EF;
 using idea102Core.Data.Entities;
 using idea102Core.Utilities.Exceptions;
@@ -10,15 +9,23 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
+using System.IO;
+using idea102Core.Application.Common;
+using idea102Core.ViewModels.Catalog.ProductImages;
 
 namespace idea102Core.Application.Catalog.Products
 {
     public class ManageProductService : IManageProductService
     {
         private readonly iCoreDbContext _context;
-        public ManageProductService(iCoreDbContext context)
+        private readonly IStorageService _storageService;
+        private const string USER_CONTENT_FOLDER_NAME = "user-content";
+        public ManageProductService(iCoreDbContext context, IStorageService storageService)
         {
             _context = context;
+            _storageService = storageService;
         }
         public async Task<int> Create(ProductCreateRequest request)
         {
@@ -44,6 +51,21 @@ namespace idea102Core.Application.Catalog.Products
                 }
             };
             _context.Products.Add(product);
+            if(request.ThumbnailImage != null)
+            {
+                product.ProductImages = new List<ProductImage>
+                {
+                    new ProductImage()
+                    {
+                        Caption = "",
+                        DateCreated = DateTime.Now,
+                        FileSize = request.ThumbnailImage.Length,
+                        ImagePath = await this.SaveFile(request.ThumbnailImage),
+                        IsDefault = true,
+                        SortOrder = 0
+                    }
+                };
+            }
             return await _context.SaveChangesAsync();
         }
 
@@ -51,11 +73,19 @@ namespace idea102Core.Application.Catalog.Products
         {
             var product = await _context.Products.FindAsync(productId);
             if (product == null) throw new iCoreException($"Không tìm thấy sản phẩm cần xóa với id: {productId}");
+            var images = _context.ProductImages.Where(i => i.ProductId == productId);
+            if (images != null)
+            {
+                foreach(var image in images)
+                {
+                    await _storageService.DeleteFileAsync(image.ImagePath);
+                }
+            }
             _context.Products.Remove(product);
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request)
+        public async Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request)
         {
             //1. Select join
             var query = from p in _context.Products
@@ -115,6 +145,19 @@ namespace idea102Core.Application.Catalog.Products
             productTranslation.SeoTitle = request.SeoTitle;
             productTranslation.SeoDescription = request.SeoDescription;
             productTranslation.SeoAlias = request.SeoAlias;
+
+            //Save image
+            if (request.ThumbnailImage != null)
+            {
+                var thumbnailImage = await _context.ProductImages.FirstOrDefaultAsync(i => i.IsDefault == true && i.ProductId == request.Id);
+                if (thumbnailImage != null)
+                {
+                    thumbnailImage.FileSize = request.ThumbnailImage.Length;
+                    thumbnailImage.ImagePath = await this.SaveFile(request.ThumbnailImage);
+                    _context.ProductImages.Update(thumbnailImage);
+                }
+            }
+
             return await _context.SaveChangesAsync();
         }
 
@@ -139,6 +182,75 @@ namespace idea102Core.Application.Catalog.Products
             var product = await _context.Products.FindAsync(productId);
             product.ViewCount += 1;
             await _context.SaveChangesAsync();
+        }
+
+        private async Task<string> SaveFile(IFormFile file)
+        {
+            var originalFileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(originalFileName)}";
+            await _storageService.SaveFileAsync(file.OpenReadStream(), fileName);
+            return "/" + USER_CONTENT_FOLDER_NAME + "/" + fileName;
+        }
+
+        public async Task<int> AddImage(int productId, ProductImageCreateRequest request)
+        {
+            var productImage = new ProductImage()
+            {
+                Caption = request.Caption,
+                DateCreated = DateTime.Now,
+                IsDefault = request.IsDefault,
+                ProductId = productId,
+                SortOrder = request.SortOrder
+            };
+
+            if (request.ImageFile != null)
+            {
+                productImage.ImagePath = await this.SaveFile(request.ImageFile);
+                productImage.FileSize = request.ImageFile.Length;
+            }
+            _context.ProductImages.Add(productImage);
+            await _context.SaveChangesAsync();
+            return productImage.Id;
+        }
+
+        public Task<int> RemoveImage(int imageId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<int> UpdateImage(int imageId, ProductImageUpdateRequest request)
+        {
+            var productImage = await _context.ProductImages.FindAsync(imageId);
+            if (productImage == null)
+                throw new iCoreException($"Không tìm thấy hình ảnh với id: {imageId}");
+
+            if (request.ImageFile != null)
+            {
+                productImage.ImagePath = await this.SaveFile(request.ImageFile);
+                productImage.FileSize = request.ImageFile.Length;
+            }
+            _context.ProductImages.Update(productImage);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<ProductImageViewModel> GetImageById(int imageId)
+        {
+            var image = await _context.ProductImages.FindAsync(imageId);
+            if (image == null)
+                throw new iCoreException($"Không tìm thấy hình ảnh với id: {imageId}");
+
+            var viewModel = new ProductImageViewModel()
+            {
+                Caption = image.Caption,
+                DateCreated = image.DateCreated,
+                FileSize = image.FileSize,
+                Id = image.Id,
+                ImagePath = image.ImagePath,
+                IsDefault = image.IsDefault,
+                ProductId = image.ProductId,
+                SortOrder = image.SortOrder
+            };
+            return viewModel;
         }
     }
 }

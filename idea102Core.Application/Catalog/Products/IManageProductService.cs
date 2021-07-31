@@ -1,6 +1,7 @@
-﻿using idea102Core.Application.Catalog.Products.Dtos;
-using idea102Core.Application.Catalog.Products.Dtos.Manage;
-using idea102Core.Application.Dtos;
+﻿using idea102Core.ViewModels.Catalog.ProductImages;
+using idea102Core.ViewModels.Catalog.Products;
+using idea102Core.ViewModels.Common;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,11 @@ namespace idea102Core.Application.Catalog.Products
         Task<bool> UpdatePrice(int productId, decimal newPrice);
         Task<bool> UpdateStock(int productId, int addedQuantity);
         Task AddViewCount(int productId);
-        Task<PagedResult<ProductViewModel>> GetAllPaging(GetProductPagingRequest request);
+        Task<PagedResult<ProductViewModel>> GetAllPaging(GetManageProductPagingRequest request);
+
+        Task<int> AddImage(int productId, ProductImageCreateRequest request);
+        Task<int> RemoveImage(int imageId);
+        Task<int> UpdateImage(int imageId, ProductImageUpdateRequest request);
+        Task<ProductImageViewModel> GetImageById(int imageId);
     }
 }

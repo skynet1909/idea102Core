@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace idea102Core.Application.Catalog.Products.Dtos.Manage
+namespace idea102Core.ViewModels.Catalog.Products
 {
     public class ProductCreateRequest
     {
