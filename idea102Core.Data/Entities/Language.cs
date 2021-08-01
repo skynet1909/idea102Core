@@ -14,6 +14,6 @@ namespace idea102Core.Data.Entities
 
         public List<ProductTranslation> ProductTranslations { get; set; }
 
-        public List<ProductCategoryTranslation> CategoryTranslations { get; set; }
+        public List<CategoryTranslation> CategoryTranslations { get; set; }
     }
 }

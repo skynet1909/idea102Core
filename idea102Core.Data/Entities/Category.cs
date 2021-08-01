@@ -5,7 +5,7 @@ using System.Text;
 
 namespace idea102Core.Data.Entities
 {
-    public class ProductCategory
+    public class Category
     {
         public int Id { set; get; }
         public int SortOrder { set; get; }
@@ -13,6 +13,6 @@ namespace idea102Core.Data.Entities
         public int? ParentId { set; get; }
         public Status Status { set; get; }
         public List<ProductInCategory> ProductInCategories { get; set; }
-        public List<ProductCategoryTranslation> ProductCategoryTranslations { get; set; }
+        public List<CategoryTranslation> ProductCategoryTranslations { get; set; }
     }
 }

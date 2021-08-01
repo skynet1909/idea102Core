@@ -7,9 +7,9 @@ using System.Text;
 
 namespace idea102Core.Data.Configurations
 {
-    public class ProductCategoryTranslationConfiguration : IEntityTypeConfiguration<ProductCategoryTranslation>
+    public class CategoryTranslationConfiguration : IEntityTypeConfiguration<CategoryTranslation>
     {
-        public void Configure(EntityTypeBuilder<ProductCategoryTranslation> builder)
+        public void Configure(EntityTypeBuilder<CategoryTranslation> builder)
         {
             builder.ToTable("CategoryTranslations");
 
