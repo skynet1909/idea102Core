@@ -8,11 +8,11 @@ using System.Text;
 
 namespace idea102Core.Data.Configurations
 {
-    public class ProductCategoryConfiguration : IEntityTypeConfiguration<ProductCategory>
+    public class CategoryConfiguration : IEntityTypeConfiguration<Category>
     {
-        public void Configure(EntityTypeBuilder<ProductCategory> builder)
+        public void Configure(EntityTypeBuilder<Category> builder)
         {
-            builder.ToTable("ProductCategories");
+            builder.ToTable("Categories");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.SortOrder).IsRequired().HasDefaultValue(0);

@@ -17,7 +17,7 @@ namespace idea102Core.Data.EF
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            var connectionString = configuration.GetConnectionString("idea102CoreSolutionDb");
+            var connectionString = configuration.GetConnectionString("eShopSolutionDb");
 
             var optionsBuilder = new DbContextOptionsBuilder<iCoreDbContext>();
             optionsBuilder.UseSqlServer(connectionString);

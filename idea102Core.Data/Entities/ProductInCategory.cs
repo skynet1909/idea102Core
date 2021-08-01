@@ -12,6 +12,6 @@ namespace idea102Core.Data.Entities
 
         public int CategoryId { get; set; }
 
-        public ProductCategory Category { get; set; }
+        public Category Category { get; set; }
     }
 }

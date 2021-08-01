@@ -4,7 +4,7 @@ using System.Text;
 
 namespace idea102Core.Data.Entities
 {
-    public class ProductCategoryTranslation
+    public class CategoryTranslation
     {
         public int Id { set; get; }
         public int CategoryId { set; get; }
@@ -14,7 +14,7 @@ namespace idea102Core.Data.Entities
         public string LanguageId { set; get; }
         public string SeoAlias { set; get; }
 
-        public ProductCategory Category { get; set; }
+        public Category Category { get; set; }
 
         public Language Language { get; set; }
     }
